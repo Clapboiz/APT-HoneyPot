@@ -1,28 +1,26 @@
 # Proactive Hybrid Honeypot-Based Detection of Advanced Persistent Threats
-## Project Overview
-This project focuses on developing a proactive security framework that integrates hybrid honeypot technology to detect and mitigate Advanced Persistent Threats (APT). By leveraging multiple layers of honeypots and integrating with firewall systems, the framework enhances early threat detection and improves network security resilience.
+## OVERVIEW
+This project focuses on proactive detection of Advanced Persistent Threats (APT) by leveraging a hybrid honeypot-based approach integrated with firewall solutions. APT attacks are sophisticated, multi-stage attacks designed to evade traditional security measures such as firewalls and Intrusion Detection Systems (IDS/IPS). The proposed system aims to enhance security monitoring by deploying different types of honeypots that simulate real-world environments and capture attacker behaviors for further analysis. The implementation is built on a containerized architecture using Kubernetes, Web Application Firewall (WAF), and an ELK Stack (Elasticsearch, Logstash, Kibana) for log analysis and visualization.
 
-## Key Features
-- **Hybrid Honeypot Deployment:** Combines low, medium, and high-interaction honeypots to gather detailed attack information.
-- **Firewall Integration:** Uses Pfsense and Web Application Firewall (ModSecurity) to isolate threats.
-- **Kubernetes & ELK Stack:** Manages honeypots efficiently and visualizes attack logs.
-- **APT Detection & Analysis:** Implements deception techniques and game theory to optimize defense strategies.
+## SOLUTION ARCHITECTURE
+The proposed hybrid honeypot system consists of three primary layers: external honeypots positioned outside the firewall to attract attackers, internal honeypots deployed behind the firewall to detect bypassed threats, and network honeypots placed within the internal network to monitor deeper intrusions. The system is orchestrated using Kubernetes, which enables dynamic scaling and efficient management of honeypots and WAF services. The firewall component is implemented using pfSense, which provides network security policies and intrusion detection capabilities. The WAF is deployed using ModSecurity integrated with Nginx Ingress Controller to analyze and filter HTTP traffic, protecting against OWASP Top 10 vulnerabilities.
 
-## System Components
-- **External Honeypots:** (Cowrie, Dionaea) Captures brute force attacks and malware samples.
-- **Internal Honeypots:** (Django Admin Honeypot, Kfsensor) Detects lateral movements and unauthorized access.
-- **Log Management:** Uses ELK Stack (Elasticsearch, Logstash, Kibana) for real-time monitoring.
-- **Automation & Machine Learning (Future Work):** Plans to enhance attack detection using AI-based anomaly detection.
+![image](https://github.com/user-attachments/assets/2557368a-3805-466b-93d9-775ab2f0fd51)
 
-## Architecture
-![image](https://github.com/user-attachments/assets/84d7bbc5-2240-49ad-9735-88eab0169555)
+## TECHNOLOGY STACK
+The system leverages multiple open-source technologies to create a robust detection and monitoring platform. Key components include:
+- **Kubernetes**: Manages the deployment of honeypots and security components, ensuring scalability and fault tolerance.
+- **Honeypots**: A combination of Cowrie (SSH/Telnet emulation for brute-force attack monitoring), Dionaea (malware trapping and multi-protocol support), Django Admin Honeypot (fake admin login panel for web attack detection), and Kfsensor (Windows-based honeypot for internal network attack monitoring).
+- **Web Application Firewall (WAF)**: ModSecurity integrated with Nginx Ingress Controller for filtering malicious HTTP requests and enforcing security policies.
+- **Log Collection and Analysis**: ELK Stack (Elasticsearch for data indexing, Logstash for log processing, and Kibana for visualization) is used to analyze attacker behaviors and generate security insights.
+- **Firewall Protection**: pfSense is used for perimeter defense, preventing unauthorized access, detecting malicious traffic patterns, and integrating with honeypots to provide a layered security model.
 
-## Experiment & Evaluation
-- Simulated APT attack scenarios, including SSH brute force, ICMP exfiltration, and web-based attacks.
-- Analyzed logs to classify attack patterns and improve system response.
-- Validated system effectiveness through controlled penetration testing.
+## IMPLEMENTATION
+The deployment process is structured into multiple stages. Initially, the firewall (pfSense) is configured to monitor network traffic and block known threats. The honeypots are deployed using Kubernetes, where each type of honeypot serves a specific role. Cowrie and Dionaea are placed in the external network to collect data on attackers' initial reconnaissance and exploitation attempts. Django Admin Honeypot is deployed to simulate a web admin panel and capture login attempts. Kfsensor is positioned within the internal network to analyze internal attack behaviors. The WAF (ModSecurity) is deployed alongside the honeypots, filtering malicious requests before they reach the internal network. All logs generated by the honeypots and WAF are collected and processed by ELK Stack, providing a real-time dashboard for security monitoring and incident response.
 
-## Future Improvements
-- Automating interaction levels in honeypots based on real-time traffic.
-- Enhancing deception techniques to evade attacker detection.
-- Implementing machine learning models for predictive attack analysis.
+## EXPERIMENTS & EVALUATION
+To evaluate the effectiveness of the hybrid honeypot system, multiple attack scenarios were simulated, including brute-force attacks on SSH services, malware execution on Dionaea, web exploitation attempts on Django Admin Honeypot, and lateral movement analysis within the internal network using Kfsensor. The honeypots successfully captured attacker interactions, including command execution, credential theft, and payload deployment. The collected data was processed using ELK Stack, which generated insights into attack trends and provided security analysts with actionable intelligence. The firewall logs and WAF rules were continuously updated based on the findings, improving overall security posture.
+
+## CONCLUSION
+The hybrid honeypot-based detection system proves to be an effective solution for identifying and analyzing APT attacks. By combining multiple honeypot types with firewall and WAF protections, the system achieves a high level of threat visibility while minimizing resource consumption. The use of Kubernetes ensures seamless deployment and management, while the ELK Stack enhances data analysis capabilities. The integration of pfSense provides an additional layer of security, blocking known threats before they reach critical systems. This approach significantly improves early threat detection and provides security teams with valuable forensic data for incident response.
+
