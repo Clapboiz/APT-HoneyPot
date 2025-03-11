@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: modsec-service
+  namespace: nginx-ingress
+spec:
+  selector:
+    app: modsec
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort
+---
+# ModSecurity Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modsec
+  namespace: nginx-ingress
+  labels:
+    app: modsec
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: modsec
+  template:
+    metadata:
+      labels:
+        app: modsec
+    spec:
+      containers:
+        - name: modsec
+          image: owasp/modsecurity-crs:4.7.0-apache-alpine-202410030910
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BACKEND
+              value: "http://dvwa-service.nginx-ingress.svc.cluster.local"
+          volumeMounts:
+            - name: modsec-logs
+              mountPath: /var/log/modsec
+      volumes:
+        - name: modsec-logs
+          emptyDir: {}

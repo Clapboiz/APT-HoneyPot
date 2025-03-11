@@ -1,0 +1,6 @@
+https://gist.github.com/rutcreate/c0041e842f858ceb455b748809763ddb
+https://kdata.vn/cam-nang/cai-dat-php-80-ubuntu-2004
+
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+python3 manage.py migrate
+python3 manage.py runserver 0.0.0.0:8686

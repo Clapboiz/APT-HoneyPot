@@ -1,0 +1,60 @@
+sudo apt remove containerd
+sudo apt update
+sudo apt install containerd.io
+sudo rm /etc/containerd/config.toml
+sudo systemctl restart containerd
+
+kubeadm config images pull
+
+sudo swapoff -a 
+kubeadm init --apiserver-advertise-address=192.168.44.128 --pod-network-cidr=192.168.0.0/16
+
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
+
+REMEMBER TO UNTAINT NODE
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+
+https://github.com/theonemule/docker-waf
+https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/
+https://stackoverflow.com/questions/75629854/modsecurity-secrule-to-block-a-request-when-it-contains-a-given-word-in-the-requ
+https://awkwardferny.medium.com/enabling-modsecurity-in-the-kubernetes-ingress-nginx-controller-111f9c877998
+
+--------------------------------------------------------------
+step to create a ingress controller
+
+git clone https://github.com/nginxinc/kubernetes-ingress.git
+curl https://192.168.99.100/meow -k -H "user-agent: fern-scanner"
+cd kubernetes-ingress
+
+kubectl apply -f deployments/common/ns-and-sa.yaml
+kubectl apply -f deployments/rbac/rbac.yaml
+
+kubectl apply -f examples/shared-examples/default-server-secret/default-server-secret.yaml
+kubectl apply -f deployments/common/nginx-config.yaml
+kubectl apply -f deployments/common/ingress-class.yaml
+
+kubectl apply -f config/crd/bases/k8s.nginx.org_virtualservers.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_virtualserverroutes.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_transportservers.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_policies.yaml
+kubectl apply -f config/crd/bases/k8s.nginx.org_globalconfigurations.yaml
+
+kubectl apply -f deployments/daemon-set/nginx-ingress.yaml
+
+kubectl get pods -n nginx-ingress
+kubectl exec -it http-test-svc-7f59bbc547-4nbjl -n nginx-ingress -- /bin/bash
+
+
+curl https://xuanthulab.test -k -H "user-agent: fern-scanner"
+-n nginx-ingress
+kubectl exec -it nginx-ingress-8rfht -n nginx-ingress -- /bin/bash
+
+kubectl get pods -n kube-system
+kubectl run -i --tty --rm debug --image=busybox --restart=Never --namespace=nginx-ingress -- nslookup dvwa-service.nginx-ingress.svc.cluster.local
+
+

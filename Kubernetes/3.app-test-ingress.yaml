@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: modsec-ingress
+  namespace: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: hehe.test
+      http:
+        paths:
+          - path: /dvwa
+            pathType: Prefix
+            backend:
+              service:
+                name: modsec-service
+                port:
+                  number: 80

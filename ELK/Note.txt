@@ -1,0 +1,59 @@
+https://valentesecuritylabs.medium.com/installing-cowrie-honeypot-part-8-d2924e35727d
+https://eval2a.wordpress.com/2017/12/22/honeypot-part-2-visualizing-the-logs-using-the-elk-stack/
+https://cybertoolguardian.blogspot.com/2023/09/elk-installation-in-ubuntu.html
+https://github.com/cowrie/cowrie/blob/master/docs/elk/README.rst
+
+echo '#!/bin/bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+echo "Updating package lists..."
+apt update
+
+echo "Installing required packages: git, nano, sqlite3, cron..."
+apt install -y git nano sqlite3 cron
+service cron start
+
+echo "Cloning dionaeaToJSON repository..."
+git clone https://github.com/eval2A/dionaeaToJSON.git
+
+echo "Moving dionaeaSqliteToJson.py to /opt..."
+cd dionaeaToJSON/
+mv dionaeaSqliteToJson.py /opt
+cd ..
+
+echo "Adding dionaeaSqliteToJson.py to Cron for execution every minute..."
+echo "* * * * * /usr/bin/python3 /opt/dionaeaSqliteToJson.py" >> /var/spool/cron/crontabs/root
+
+echo "Removing cloned repository..."
+rm -rf dionaeaToJSON/
+
+echo "Setup completed! You can proceed with further configuration as needed."' > setup.sh
+
+/opt/dionaea/bin/dionaea -l all,-debug -L '*'
+
+
+sudo apt -y install default-jre default-jdk
+
+curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" > /etc/apt/sources.list.d/elastic-7.x.list
+
+sudo apt update
+
+apt install elasticsearch -y
+
+vi /etc/elasticsearch/elasticsearch.yml
+discovery.type: single-node network.host, http.port
+
+vi /etc/elasticsearch/jvm.options
+-Xms512m
+-Xmx512m
+
+apt install logstash
+
+apt install kibana
+
+vi /etc/kibana
+
